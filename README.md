@@ -1,2 +1,2 @@
 # cache
-cache versioned keys
+redis cache with versioned keys
