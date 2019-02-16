@@ -1,2 +1,2 @@
 # cache
-gRPC caching service with versioned keys
+cache versioned keys
