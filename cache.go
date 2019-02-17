@@ -29,8 +29,8 @@ type cache struct {
 }
 
 type versionedKey struct {
-	version string
-	content interface{}
+	Version string
+	Content interface{}
 }
 
 func New(config Config) Cache {
@@ -75,8 +75,8 @@ func (c *cache) Get(key interface{}, value interface{}) error {
 
 func (c *cache) getVersionedKey(key interface{}) (string, error) {
 	v := versionedKey{
-		version: c.version,
-		content: key,
+		Version: c.version,
+		Content: key,
 	}
 
 	return asJsonString(v)
