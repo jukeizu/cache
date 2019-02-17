@@ -43,6 +43,10 @@ func New(config Config) Cache {
 	return &cache{redisClient, config.Version}
 }
 
+func NewWithRedisClient(version string, client *redis.Client) Cache {
+	return &cache{client, version}
+}
+
 func (c *cache) Set(key interface{}, value interface{}, expiration time.Duration) error {
 	jsonKey, err := c.getVersionedKey(key)
 	if err != nil {
