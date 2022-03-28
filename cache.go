@@ -1,10 +1,11 @@
 package cache
 
 import (
+	"context"
 	"encoding/json"
 	"time"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 )
 
 const (
@@ -34,13 +35,26 @@ type versionedKey struct {
 }
 
 func New(config Config) Cache {
-	redisClient := redis.NewClient(&redis.Options{
+	options := &redis.Options{
 		Addr:     config.Address,
 		Password: config.Password,
 		DB:       config.Db,
-	})
+	}
 
-	return &cache{redisClient, config.Version}
+	return NewWithRedisOptions(config.Version, options)
+}
+
+func NewWithRedisURL(version string, url string) (Cache, error) {
+	options, err := redis.ParseURL(url)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewWithRedisOptions(version, options), nil
+}
+
+func NewWithRedisOptions(version string, options *redis.Options) Cache {
+	return NewWithRedisClient(version, redis.NewClient(options))
 }
 
 func NewWithRedisClient(version string, client *redis.Client) Cache {
@@ -58,7 +72,7 @@ func (c *cache) Set(key interface{}, value interface{}, expiration time.Duration
 		return err
 	}
 
-	redisError := c.client.Set(jsonKey, jsonValue, expiration)
+	redisError := c.client.Set(context.Background(), jsonKey, jsonValue, expiration)
 
 	return redisError.Err()
 }
@@ -69,7 +83,7 @@ func (c *cache) Get(key interface{}, value interface{}) error {
 		return err
 	}
 
-	val, err := c.client.Get(jsonKey).Result()
+	val, err := c.client.Get(context.Background(), jsonKey).Result()
 	if err != nil {
 		return err
 	}

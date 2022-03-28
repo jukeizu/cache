@@ -1,8 +1,10 @@
 module github.com/jukeizu/cache
 
+go 1.17
+
+require github.com/go-redis/redis/v8 v8.11.5
+
 require (
-	github.com/go-redis/redis v6.15.1+incompatible
-	github.com/onsi/ginkgo v1.7.0 // indirect
-	github.com/onsi/gomega v1.4.3 // indirect
-	golang.org/x/net v0.0.0-20190213061140-3a22650c66bd // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 )
